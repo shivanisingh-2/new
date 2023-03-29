@@ -14,7 +14,7 @@ jobs:
         
       - name: upgrade kubectl version  
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/darwin/arm64/kubectl"
+          curl -LO https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin
           kubectl version --client
