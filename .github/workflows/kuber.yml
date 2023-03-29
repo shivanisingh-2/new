@@ -9,15 +9,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
       - name: Check kubectl version
         run: kubectl version --client
         
-      - name: upgrade kubectl version  
+      - name: Install client-go credential plugin
         run: |
-          curl -LO https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl
-          chmod +x kubectl
-          sudo mv kubectl /usr/local/bin
-          kubectl version --client
+          go get k8s.io/client-go@v0.21.1
+          go get k8s.io/client-go/plugin/pkg/client/auth/oidc
+
+      - name: Build and Test
+        run: |
+          go build
+          go test ./...
+ 
           
       - name: Configure AWS credentials
         env:
@@ -29,7 +36,6 @@ jobs:
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set region $AWS_DEFAULT_REGION
           
-      - uses: actions/checkout@v1
       - uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
