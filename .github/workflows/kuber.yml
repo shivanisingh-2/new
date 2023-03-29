@@ -18,11 +18,10 @@ jobs:
       - name: Install client-go credential plugin
         run: |
           go get k8s.io/client-go@v0.21.1
-          go get k8s.io/client-go/plugin/pkg/client/auth/oidc
+          go install k8s.io/client-go/plugin/pkg/client/auth/oidc
 
       - name: Build and Test
         run: |
-          go build
           go test ./...
  
           
