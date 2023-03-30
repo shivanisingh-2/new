@@ -34,11 +34,12 @@ jobs:
         run: |
           aws eks update-kubeconfig --region us-east-1 --name test
       
-     
+      - name: cat kube
+        run: |
+          cat ~/.kube/config 
+          
       - name: check pods
         run: |
           kubectl get po
           
-      - name: deploy pod
-        run: |
-          kubectl apply -f pod.yml
+ 
