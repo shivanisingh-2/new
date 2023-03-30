@@ -38,3 +38,7 @@ jobs:
       - name: check pods
         run: |
           kubectl get po
+          
+      - name: deploy pod
+        run: |
+          kubectl apply -f pod.yml
