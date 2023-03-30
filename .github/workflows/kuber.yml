@@ -14,15 +14,11 @@ jobs:
         
       - name: Check kubectl version
         run: kubectl version --client
-        
-      - name: Install client-go credential plugin
-        run: |
-          go install k8s.io/client-go@v0.21.1
-          go install k8s.io/client-go/plugin/pkg/client/auth/oidc
-
-      - name: Build and Test
-        run: |
-          go test ./...
+ 
+      - uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.26.0' # default is latest stable
+        id: install
  
           
       - name: Configure AWS credentials
@@ -34,9 +30,11 @@ jobs:
           aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set region $AWS_DEFAULT_REGION
-          
-      - uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-        with:
-          args: get pods
+      - name: update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region us-east-1 --name test
+      
+     
+      - name: check pods
+        run: |
+          kubectl get po
